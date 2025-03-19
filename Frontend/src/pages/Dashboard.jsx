@@ -1,18 +1,21 @@
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
-    const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
-    return (
-        <div>
-            <h1>Dashboard</h1>
-            {user.role === "admin" ? (
-                <p>Welcome Admin! You can manage books.</p>
-            ) : (
-                <p>Welcome User! You can view books.</p>
-            )}
-        </div>
-    );
+  if (!user) {
+    navigate("/login");
+    return null;
+  }
+
+  return (
+    <div>
+      <h2>Welcome, {user?.name || "User"}!</h2>
+      <button onClick={logout}>Logout</button>
+    </div>
+  );
 };
 
 export default Dashboard;

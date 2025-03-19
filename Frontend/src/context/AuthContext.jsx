@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
 
 export const AuthContext = createContext();
@@ -26,7 +26,9 @@ export const AuthProvider = ({ children }) => {
       const res = await axios.post(`${BASE_URL}/login`, { email, password });
       setUser(res.data);
     } catch (error) {
-      throw error.response?.data?.message || "Login failed. Please try again.";
+      throw new Error(
+        error.response?.data?.message || "Login failed. Please try again."
+      );
     }
   };
 
@@ -36,13 +38,17 @@ export const AuthProvider = ({ children }) => {
       const res = await axios.post(`${BASE_URL}/register`, formData);
       setUser(res.data);
     } catch (error) {
-      throw error.response?.data?.message || "Registration failed. Please try again.";
+      throw new Error(
+        error.response?.data?.message ||
+          "Registration failed. Please try again."
+      );
     }
   };
 
   // Logout function
   const logout = () => {
     setUser(null);
+    localStorage.removeItem("user");
   };
 
   return (
@@ -50,4 +56,9 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+// Custom hook to use AuthContext
+export const useAuth = () => {
+  return useContext(AuthContext);
 };

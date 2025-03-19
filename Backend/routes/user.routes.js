@@ -8,6 +8,6 @@ const router = express.Router();
 
 router.post("/register", createUser)
 router.post("/login", loginUser)
-router.post("/user-details/:id", authMiddleware, userDetails);
+router.get("/user-details/:id", authMiddleware, userDetails);
 
 module.exports = router
